@@ -1,0 +1,52 @@
+<h1>新しい請求書の作成</h1>
+
+<form action="/invoices" method="post">
+  <% if @invoice.client %>
+    <input type="hidden" name="client_id" value="<%= @invoice.client.id %>">
+    <p>取引先: <%= @invoice.client.name %></p>
+  <% else %>
+    <div>
+      <label for="client_id">取引先:</label>
+      <select id="client_id" name="client_id">
+        <% Client.all.each do |client| %>
+          <option value="<%= client.id %>"><%= client.name %></option>
+        <% end %>
+      </select>
+    </div>
+  <% end %>
+
+  <div>
+    <label for="issue_date">請求日:</label>
+    <input type="date" id="issue_date" name="issue_date" value="<%= @invoice.issue_date %>">
+  </div>
+  <div>
+    <label for="due_date">支払期日:</label>
+    <input type="date" id="due_date" name="due_date" value="<%= @invoice.due_date %>">
+  </div>
+  <div>
+    <label for="subject">件名:</label>
+    <input type="text" id="subject" name="subject" value="<%= @invoice.subject %>">
+  </div>
+  <div>
+    <label for="amount">金額:</label>
+    <input type="number" id="amount" name="amount" step="0.01" value="<%= @invoice.amount %>">
+  </div>
+  <div>
+    <label for="status">ステータス:</label>
+    <select id="status" name="status">
+      <option value="draft" <%= 'selected' if @invoice.status == 'draft' %>>下書き</option>
+      <option value="sent" <%= 'selected' if @invoice.status == 'sent' %>>送付済み</option>
+      <option value="paid" <%= 'selected' if @invoice.status == 'paid' %>>入金済み</option>
+      <option value="overdue" <%= 'selected' if @invoice.status == 'overdue' %>>期限切れ</option>
+    </select>
+  </div>
+  <div>
+    <label for="direction">区分:</label>
+    <select id="direction" name="direction">
+      <option value="sent" <%= 'selected' if @invoice.direction == 'sent' %>>送った請求書</option>
+      <option value="received" <%= 'selected' if @invoice.direction == 'received' %>>受け取った請求書</option>
+    </select>
+  </div>
+  <button type="submit">作成</button>
+</form>
+

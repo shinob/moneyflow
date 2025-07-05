@@ -1,0 +1,39 @@
+<h1>見積書 #<%= @estimate.id %> の編集</h1>
+
+<form action="/estimates/<%= @estimate.id %>" method="post">
+  <input type="hidden" name="_method" value="put">
+  <div>
+    <label for="issue_date">見積日:</label>
+    <input type="date" id="issue_date" name="issue_date" value="<%= @estimate.issue_date %>">
+  </div>
+  <div>
+    <label for="expiry_date">有効期限:</label>
+    <input type="date" id="expiry_date" name="expiry_date" value="<%= @estimate.expiry_date %>">
+  </div>
+  <div>
+    <label for="subject">件名:</label>
+    <input type="text" id="subject" name="subject" value="<%= @estimate.subject %>">
+  </div>
+  <div>
+    <label for="amount">金額:</label>
+    <input type="number" id="amount" name="amount" step="0.01" value="<%= @estimate.amount %>">
+  </div>
+  <div>
+    <label for="status">ステータス:</label>
+    <select id="status" name="status">
+      <option value="draft" <%= 'selected' if @estimate.status == 'draft' %>>下書き</option>
+      <option value="submitted" <%= 'selected' if @estimate.status == 'submitted' %>>提出済み</option>
+      <option value="approved" <%= 'selected' if @estimate.status == 'approved' %>>承認済み</option>
+      <option value="expired" <%= 'selected' if @estimate.status == 'expired' %>>失効</option>
+    </select>
+  </div>
+  <div>
+    <label for="direction">区分:</label>
+    <select id="direction" name="direction">
+      <option value="sent" <%= 'selected' if @estimate.direction == 'sent' %>>送った見積書</option>
+      <option value="received" <%= 'selected' if @estimate.direction == 'received' %>>受け取った見積書</option>
+    </select>
+  </div>
+  <button type="submit">更新</button>
+</form>
+

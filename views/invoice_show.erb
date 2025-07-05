@@ -1,0 +1,54 @@
+<h1>請求書 #<%= @invoice.id %> の詳細</h1>
+
+<p>取引先: <%= @invoice.client.name %></p>
+<p>請求日: <%= @invoice.issue_date %></p>
+<p>支払期日: <%= @invoice.due_date %></p>
+<p>件名: <%= @invoice.subject %></p>
+<p>金額: <%= @invoice.amount %></p>
+<p>ステータス: <%= @invoice.status %></p>
+<p>区分: <%= @invoice.direction %></p>
+<p><a href="/invoices/<%= @invoice.id %>/edit" class="button-link">編集</a></p>
+
+<h2>ステータス変更</h2>
+<form action="/invoices/<%= @invoice.id %>/update" method="post">
+  <div>
+    <label for="status">新しいステータス:</label>
+    <select id="status" name="status">
+      <option value="draft" <%= 'selected' if @invoice.status == 'draft' %>>下書き</option>
+      <option value="sent" <%= 'selected' if @invoice.status == 'sent' %>>送付済み</option>
+      <option value="paid" <%= 'selected' if @invoice.status == 'paid' %>>入金済み</option>
+      <option value="overdue" <%= 'selected' if @invoice.status == 'overdue' %>>期限切れ</option>
+    </select>
+  </div>
+  <button type="submit">ステータスを更新</button>
+</form>
+
+<h2>入金履歴</h2>
+
+<% if @invoice.payments.empty? %>
+  <p>この請求書にはまだ入金がありません。</p>
+<% else %>
+  <ul>
+    <% @invoice.payments.each do |payment| %>
+      <li>
+        入金日: <%= payment.payment_date %>,
+        入金額: <%= payment.amount %>
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+
+<h2>新しい入金の記録</h2>
+
+<form action="/invoices/<%= @invoice.id %>/payments" method="post">
+  <div>
+    <label for="payment_date">入金日:</label>
+    <input type="date" id="payment_date" name="payment_date">
+  </div>
+  <div>
+    <label for="payment_amount">入金額:</label>
+    <input type="number" id="payment_amount" name="amount" step="0.01">
+  </div>
+  <button type="submit">入金を記録</button>
+</form>
+

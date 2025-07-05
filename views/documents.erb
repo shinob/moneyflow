@@ -1,0 +1,75 @@
+<h1>すべてのドキュメント</h1>
+
+<h2>送ったドキュメント</h2>
+<h3>送った請求書</h3>
+<% sent_invoices = @invoices.select { |i| i.direction == 'sent' } %>
+<% if sent_invoices.empty? %>
+  <p>送った請求書はまだありません。</p>
+<% else %>
+  <ul>
+    <% sent_invoices.each do |invoice| %>
+      <li>
+        取引先: <%= invoice.client.name %>,
+        件名: <%= invoice.subject %>,
+        金額: <%= invoice.amount %>,
+        ステータス: <%= invoice.status %>
+        (<a href="/invoices/<%= invoice.id %>">詳細</a>)
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+
+<h3>送った見積書</h3>
+<% sent_estimates = @estimates.select { |e| e.direction == 'sent' } %>
+<% if sent_estimates.empty? %>
+  <p>送った見積書はまだありません。</p>
+<% else %>
+  <ul>
+    <% sent_estimates.each do |estimate| %>
+      <li>
+        取引先: <%= estimate.client.name %>,
+        件名: <%= estimate.subject %>,
+        金額: <%= estimate.amount %>,
+        ステータス: <%= estimate.status %>
+        (<a href="/estimates/<%= estimate.id %>">詳細</a>)
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+
+<h2>受け取ったドキュメント</h2>
+<h3>受け取った請求書</h3>
+<% received_invoices = @invoices.select { |i| i.direction == 'received' } %>
+<% if received_invoices.empty? %>
+  <p>受け取った請求書はまだありません。</p>
+<% else %>
+  <ul>
+    <% received_invoices.each do |invoice| %>
+      <li>
+        取引先: <%= invoice.client.name %>,
+        件名: <%= invoice.subject %>,
+        金額: <%= invoice.amount %>,
+        ステータス: <%= invoice.status %>
+        (<a href="/invoices/<%= invoice.id %>">詳細</a>)
+      </li>
+    <% end %>
+  </ul>
+<% end %>
+
+<h3>受け取った見積書</h3>
+<% received_estimates = @estimates.select { |e| e.direction == 'received' } %>
+<% if received_estimates.empty? %>
+  <p>受け取った見積書はまだありません。</p>
+<% else %>
+  <ul>
+    <% received_estimates.each do |estimate| %>
+      <li>
+        取引先: <%= estimate.client.name %>,
+        件名: <%= estimate.subject %>,
+        金額: <%= estimate.amount %>,
+        ステータス: <%= estimate.status %>
+        (<a href="/estimates/<%= estimate.id %>">詳細</a>)
+      </li>
+    <% end %>
+  </ul>
+<% end %>

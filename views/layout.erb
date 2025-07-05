@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MoneyFlow</title>
+  <style>
+    body { font-family: sans-serif; margin: 20px; }
+    nav ul { list-style: none; padding: 0; }
+    nav li { display: inline; margin-right: 20px; }
+    nav a { text-decoration: none; color: blue; }
+    nav a:hover { text-decoration: underline; }
+    h1, h2 { color: #333; }
+    form div { margin-bottom: 10px; }
+    label { display: inline-block; width: 100px; }
+    input[type="text"], input[type="date"], input[type="number"], select { width: 200px; padding: 5px; border: 1px solid #ccc; border-radius: 4px; }
+    button { padding: 8px 15px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    button:hover { background-color: #0056b3; }
+    .button-link {
+      display: inline-block;
+      padding: 8px 15px;
+      background-color: #007bff;
+      color: white;
+      text-decoration: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .button-link:hover { background-color: #0056b3; }
+    .tab-buttons {
+      display: flex;
+      margin-bottom: 20px;
+    }
+    .tab-button {
+      padding: 10px 15px;
+      border: 1px solid #ccc;
+      border-bottom: none;
+      cursor: pointer;
+      background-color: #e9e9e9;
+      color: #333;
+    }
+    .tab-button.active {
+      background-color: #ffffff;
+      color: #000;
+      border-bottom: 1px solid #ffffff;
+    }
+    .tab-content {
+      border: 1px solid #ccc;
+      padding: 20px;
+    }
+    .tab-content.hidden {
+      display: none;
+    }
+    ul { list-style: none; padding: 0; }
+    li { margin-bottom: 5px; }
+  </style>
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="/">ホーム</a></li>
+      <li><a href="/clients">取引先</a></li>
+      <li><a href="/estimates">見積書</a></li>
+      <li><a href="/invoices">請求書</a></li>
+      <li><a href="/documents">ドキュメント一覧</a></li>
+    </ul>
+  </nav>
+  <hr>
+  <%= yield %>
+</body>
+</html>

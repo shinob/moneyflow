@@ -1,0 +1,26 @@
+<h1>見積書 #<%= @estimate.id %> の詳細</h1>
+
+<p>取引先: <%= @estimate.client.name %></p>
+<p>見積日: <%= @estimate.issue_date %></p>
+<p>有効期限: <%= @estimate.expiry_date %></p>
+<p>件名: <%= @estimate.subject %></p>
+<p>金額: <%= @estimate.amount %></p>
+<p>ステータス: <%= @estimate.status %></p>
+<p>区分: <%= @estimate.direction %></p>
+<p><a href="/estimates/<%= @estimate.id %>/edit" class="button-link">編集</a></p>
+<p><a href="/invoices/new?estimate_id=<%= @estimate.id %>" class="button-link">この見積書から請求書を作成</a></p>
+
+<h2>ステータス変更</h2>
+<form action="/estimates/<%= @estimate.id %>/update" method="post">
+  <div>
+    <label for="status">新しいステータス:</label>
+    <select id="status" name="status">
+      <option value="draft" <%= 'selected' if @estimate.status == 'draft' %>>下書き</option>
+      <option value="submitted" <%= 'selected' if @estimate.status == 'submitted' %>>提出済み</option>
+      <option value="approved" <%= 'selected' if @estimate.status == 'approved' %>>承認済み</option>
+      <option value="expired" <%= 'selected' if @estimate.status == 'expired' %>>失効</option>
+    </select>
+  </div>
+  <button type="submit">ステータスを更新</button>
+</form>
+

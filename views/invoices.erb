@@ -1,0 +1,94 @@
+<div id="invoices-tabs-container">
+  <style>
+    .tab-buttons {
+      display: flex;
+      margin-bottom: 20px;
+    }
+    .tab-button {
+      padding: 10px 15px;
+      border: 1px solid #ccc;
+      border-bottom: none;
+      cursor: pointer;
+      background-color: #e9e9e9;
+      color: #333;
+    }
+    .tab-button.active {
+      background-color: #ffffff;
+      color: #000;
+      border-bottom: 1px solid #ffffff;
+    }
+    .tab-content {
+      border: 1px solid #ccc;
+      padding: 20px;
+    }
+    .tab-content.hidden {
+      display: none;
+    }
+  </style>
+
+  <div class="tab-buttons">
+    <button class="tab-button active" onclick="showInvoiceTab('sent', this)">送った請求書</button>
+    <button class="tab-button" onclick="showInvoiceTab('received', this)">受け取った請求書</button>
+  </div>
+
+  <div id="sent-invoices-tab" class="tab-content">
+    <h3>送った請求書</h3>
+    <% sent_invoices = @invoices.select { |i| i.direction == 'sent' } %>
+    <% if sent_invoices.empty? %>
+      <p>送った請求書はまだありません。</p>
+    <% else %>
+      <ul>
+        <% sent_invoices.each do |invoice| %>
+          <li>
+            取引先: <%= invoice.client.name %>,
+            請求日: <%= invoice.issue_date %>,
+            支払期日: <%= invoice.due_date %>,
+            件名: <%= invoice.subject %>,
+            金額: <%= invoice.amount %>,
+            ステータス: <%= invoice.status %>
+            (<a href="/invoices/<%= invoice.id %>">詳細</a>)
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+
+  <div id="received-invoices-tab" class="tab-content hidden">
+    <h3>受け取った請求書</h3>
+    <% received_invoices = @invoices.select { |i| i.direction == 'received' } %>
+    <% if received_invoices.empty? %>
+      <p>受け取った請求書はまだありません。</p>
+    <% else %>
+      <ul>
+        <% received_invoices.each do |invoice| %>
+          <li>
+            取引先: <%= invoice.client.name %>,
+            請求日: <%= invoice.issue_date %>,
+            支払期日: <%= invoice.due_date %>,
+            件名: <%= invoice.subject %>,
+            金額: <%= invoice.amount %>,
+            ステータス: <%= invoice.status %>
+            (<a href="/invoices/<%= invoice.id %>">詳細</a>)
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+
+  <script>
+    function showInvoiceTab(tabId, clickedButton) {
+    const contents = document.querySelectorAll('#invoices-tabs-container .tab-content');
+    contents.forEach(content => {
+      content.classList.add('hidden');
+    });
+
+    const buttons = document.querySelectorAll('#invoices-tabs-container .tab-button');
+    buttons.forEach(button => {
+      button.classList.remove('active');
+    });
+
+    document.getElementById(tabId + '-invoices-tab').classList.remove('hidden');
+    clickedButton.classList.add('active');
+  }
+  </script>
+</div>
