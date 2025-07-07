@@ -110,6 +110,22 @@ get '/clients/:id' do
   erb :client_show
 end
 
+get '/clients/:id/edit' do
+  @client = Client.find(params[:id])
+  erb :client_edit
+end
+
+put '/clients/:id' do
+  @client = Client.find(params[:id])
+  @client.update(
+    name: params[:name],
+    address: params[:address],
+    contact_person: params[:contact_person],
+    phone_number: params[:phone_number]
+  )
+  redirect "/clients/#{@client.id}"
+end
+
 # 請求書作成ルート (GET /invoices/new) は /invoices/:id よりも前に配置
 get '/invoices/new' do
   @invoice = Invoice.new

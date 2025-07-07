@@ -1,17 +1,34 @@
 <h1>取引先一覧</h1>
 
-<ul>
-  <% @clients.each do |client| %>
-    <li><a href="/clients/<%= client.id %>"><%= client.name %></a></li>
-  <% end %>
-</ul>
+<table>
+  <thead>
+    <tr>
+      <th>会社名</th>
+      <th>住所</th>
+      <th>担当者名</th>
+      <th>電話番号</th>
+      <th>アクション</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @clients.each do |client| %>
+      <tr>
+        <td><%= client.name %></td>
+        <td><%= client.address %></td>
+        <td><%= client.contact_person %></td>
+        <td><%= client.phone_number %></td>
+        <td><a href="/clients/<%= client.id %>">詳細</a></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 
 <h2>取引先登録</h2>
 
 <form action="/clients" method="post">
   <div>
     <label for="name">会社名:</label>
-    <input type="text" id="name" name="name">
+    <input type="text" id="name" name="name" required>
   </div>
   <div>
     <label for="address">住所:</label>
@@ -27,4 +44,3 @@
   </div>
   <button type="submit">登録</button>
 </form>
-
