@@ -1,4 +1,61 @@
-<h1>すべてのドキュメント</h1>
+<h1>一覧</h1>
+
+<div class="tab-buttons">
+  <a href="/documents" class="tab-button <%= 'active' unless params[:year] || params[:month] %>">すべて</a>
+  <% @dates.group_by(&:first).each do |year, months| %>
+    <div class="tab-button dropdown <%= 'active' if params[:year].to_i == year %>">
+      <a href="/documents?year=<%= year %>"><%= year %>年</a>
+      <div class="dropdown-content">
+        <% months.map(&:last).uniq.sort.reverse.each do |month| %>
+          <a href="/documents?year=<%= year %>&month=<%= month %>" class="<%= 'active' if params[:year].to_i == year && params[:month].to_i == month %>"><%= month %>月</a>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<style>
+.dropdown {
+  position: relative;
+}
+
+.dropdown .dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 100%;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  border: 1px solid #ccc;
+}
+
+.dropdown .dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+}
+
+.dropdown .dropdown-content a:hover {background-color: #f1f1f1}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* The main link inside the dropdown tab */
+.dropdown > a {
+    text-decoration: none;
+    color: inherit;
+    padding: 10px 15px;
+}
+
+/* Adjust tab-button style for dropdown container */
+.tab-button.dropdown {
+    padding: 0;
+}
+
+</style>
 
 <h2>送ったドキュメント</h2>
 <h3>送った請求書</h3>

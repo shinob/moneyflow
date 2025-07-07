@@ -179,8 +179,32 @@ get '/estimates' do
 end
 
 get '/documents' do
-  @invoices = Invoice.all
-  @estimates = Estimate.all
+  @year = params[:year].to_i if params[:year]
+  @month = params[:month].to_i if params[:month]
+
+  invoices = Invoice.order(issue_date: :desc)
+  estimates = Estimate.order(issue_date: :desc)
+
+  if @year && @month
+    start_date = Date.new(@year, @month, 1)
+    end_date = start_date.end_of_month
+    invoices = invoices.where(issue_date: start_date..end_date)
+    estimates = estimates.where(issue_date: start_date..end_date)
+  elsif @year
+    start_date = Date.new(@year, 1, 1)
+    end_date = start_date.end_of_year
+    invoices = invoices.where(issue_date: start_date..end_date)
+    estimates = estimates.where(issue_date: start_date..end_date)
+  end
+
+  @invoices = invoices
+  @estimates = estimates
+
+  # Get all unique year-month combinations for the navigation
+  invoice_dates = Invoice.pluck(:issue_date).map { |d| [d.year, d.month] }
+  estimate_dates = Estimate.pluck(:issue_date).map { |d| [d.year, d.month] }
+  @dates = (invoice_dates + estimate_dates).uniq.sort.reverse
+
   erb :documents
 end
 
