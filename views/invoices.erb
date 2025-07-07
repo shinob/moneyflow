@@ -37,19 +37,32 @@
     <% if sent_invoices.empty? %>
       <p>送った請求書はまだありません。</p>
     <% else %>
-      <ul>
-        <% sent_invoices.each do |invoice| %>
-          <li>
-            取引先: <%= invoice.client.name %>,
-            請求日: <%= invoice.issue_date %>,
-            支払期日: <%= invoice.due_date %>,
-            件名: <%= invoice.subject %>,
-            金額: <%= invoice.amount %>,
-            ステータス: <%= invoice.status %>
-            (<a href="/invoices/<%= invoice.id %>">詳細</a>)
-          </li>
-        <% end %>
-      </ul>
+      <table class="invoice-table">
+        <thead>
+          <tr>
+            <th>取引先</th>
+            <th>請求日</th>
+            <th>支払期日</th>
+            <th>件名</th>
+            <th>金額</th>
+            <th>ステータス</th>
+            <th>詳細</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% sent_invoices.each do |invoice| %>
+            <tr>
+              <td><%= invoice.client.name %></td>
+              <td><%= invoice.issue_date %></td>
+              <td><%= invoice.due_date %></td>
+              <td><%= invoice.subject %></td>
+              <td><%= invoice.amount %></td>
+              <td><%= invoice.status %></td>
+              <td><a href="/invoices/<%= invoice.id %>">詳細</a></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     <% end %>
   </div>
 
@@ -59,19 +72,32 @@
     <% if received_invoices.empty? %>
       <p>受け取った請求書はまだありません。</p>
     <% else %>
-      <ul>
-        <% received_invoices.each do |invoice| %>
-          <li>
-            取引先: <%= invoice.client.name %>,
-            請求日: <%= invoice.issue_date %>,
-            支払期日: <%= invoice.due_date %>,
-            件名: <%= invoice.subject %>,
-            金額: <%= invoice.amount %>,
-            ステータス: <%= invoice.status %>
-            (<a href="/invoices/<%= invoice.id %>">詳細</a>)
-          </li>
-        <% end %>
-      </ul>
+      <table class="invoice-table">
+        <thead>
+          <tr>
+            <th>取引先</th>
+            <th>請求日</th>
+            <th>支払期日</th>
+            <th>件名</th>
+            <th>金額</th>
+            <th>ステータス</th>
+            <th>詳細</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% received_invoices.each do |invoice| %>
+            <tr>
+              <td><%= invoice.client.name %></td>
+              <td><%= invoice.issue_date %></td>
+              <td><%= invoice.due_date %></td>
+              <td><%= invoice.subject %></td>
+              <td><%= invoice.amount %></td>
+              <td><%= invoice.status %></td>
+              <td><a href="/invoices/<%= invoice.id %>">詳細</a></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     <% end %>
   </div>
 

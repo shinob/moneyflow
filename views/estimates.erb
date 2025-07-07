@@ -37,19 +37,32 @@
     <% if sent_estimates.empty? %>
       <p>送った見積書はまだありません。</p>
     <% else %>
-      <ul>
-        <% sent_estimates.each do |estimate| %>
-          <li>
-            取引先: <%= estimate.client.name %>,
-            見積日: <%= estimate.issue_date %>,
-            有効期限: <%= estimate.expiry_date %>,
-            件名: <%= estimate.subject %>,
-            金額: <%= estimate.amount %>,
-            ステータス: <%= estimate.status %>
-            (<a href="/estimates/<%= estimate.id %>">詳細</a>)
-          </li>
-        <% end %>
-      </ul>
+      <table class="estimate-table">
+        <thead>
+          <tr>
+            <th>取引先</th>
+            <th>見積日</th>
+            <th>有効期限</th>
+            <th>件名</th>
+            <th>金額</th>
+            <th>ステータス</th>
+            <th>詳細</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% sent_estimates.each do |estimate| %>
+            <tr>
+              <td><%= estimate.client.name %></td>
+              <td><%= estimate.issue_date %></td>
+              <td><%= estimate.expiry_date %></td>
+              <td><%= estimate.subject %></td>
+              <td><%= estimate.amount %></td>
+              <td><%= estimate.status %></td>
+              <td><a href="/estimates/<%= estimate.id %>">詳細</a></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     <% end %>
   </div>
 
@@ -59,19 +72,32 @@
     <% if received_estimates.empty? %>
       <p>受け取った見積書はまだありません。</p>
     <% else %>
-      <ul>
-        <% received_estimates.each do |estimate| %>
-          <li>
-            取引先: <%= estimate.client.name %>,
-            見積日: <%= estimate.issue_date %>,
-            有効期限: <%= estimate.expiry_date %>,
-            件名: <%= estimate.subject %>,
-            金額: <%= estimate.amount %>,
-            ステータス: <%= estimate.status %>
-            (<a href="/estimates/<%= estimate.id %>">詳細</a>)
-          </li>
-        <% end %>
-      </ul>
+      <table class="estimate-table">
+        <thead>
+          <tr>
+            <th>取引先</th>
+            <th>見積日</th>
+            <th>有効期限</th>
+            <th>件名</th>
+            <th>金額</th>
+            <th>ステータス</th>
+            <th>詳細</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% received_estimates.each do |estimate| %>
+            <tr>
+              <td><%= estimate.client.name %></td>
+              <td><%= estimate.issue_date %></td>
+              <td><%= estimate.expiry_date %></td>
+              <td><%= estimate.subject %></td>
+              <td><%= estimate.amount %></td>
+              <td><%= estimate.status %></td>
+              <td><a href="/estimates/<%= estimate.id %>">詳細</a></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     <% end %>
   </div>
 

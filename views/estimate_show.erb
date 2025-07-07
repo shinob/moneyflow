@@ -1,6 +1,5 @@
-<h1>見積書 #<%= @estimate.id %> の詳細</h1>
-
-<p>取引先: <%= @estimate.client.name %></p>
+<h1><%= @estimate.subject %></h1>
+<h2>取引先: <%= @estimate.client.name %></h2>
 <p>見積日: <%= @estimate.issue_date %></p>
 <p>有効期限: <%= @estimate.expiry_date %></p>
 <p>件名: <%= @estimate.subject %></p>

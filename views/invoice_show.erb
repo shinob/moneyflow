@@ -1,6 +1,5 @@
-<h1>請求書 #<%= @invoice.id %> の詳細</h1>
-
-<p>取引先: <%= @invoice.client.name %></p>
+<h1><%= @invoice.subject %></h1>
+<h2>取引先: <%= @invoice.client.name %></h2>
 <p>請求日: <%= @invoice.issue_date %></p>
 <p>支払期日: <%= @invoice.due_date %></p>
 <p>件名: <%= @invoice.subject %></p>

@@ -18,19 +18,32 @@
     <% if @client.invoices.empty? %>
       <p>この取引先にはまだ請求書がありません。</p>
     <% else %>
-      <ul>
-        <% @client.invoices.each do |invoice| %>
-          <li>
-            請求日: <%= invoice.issue_date %>,
-            支払期日: <%= invoice.due_date %>,
-            件名: <%= invoice.subject %>,
-            金額: <%= invoice.amount %>,
-            ステータス: <%= invoice.status %>,
-            区分: <%= invoice.direction %>
-            (<a href="/invoices/<%= invoice.id %>">詳細</a>)
-          </li>
-        <% end %>
-      </ul>
+      <table class="invoice-table">
+        <thead>
+          <tr>
+            <th>請求日</th>
+            <th>支払期日</th>
+            <th>件名</th>
+            <th>金額</th>
+            <th>ステータス</th>
+            <th>区分</th>
+            <th>詳細</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @client.invoices.each do |invoice| %>
+            <tr>
+              <td><%= invoice.issue_date %></td>
+              <td><%= invoice.due_date %></td>
+              <td><%= invoice.subject %></td>
+              <td><%= invoice.amount %></td>
+              <td><%= invoice.status %></td>
+              <td><%= invoice.direction %></td>
+              <td><a href="/invoices/<%= invoice.id %>">詳細</a></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     <% end %>
 
     <h3>新しい請求書の作成</h3>
@@ -43,19 +56,32 @@
     <% if @client.estimates.empty? %>
       <p>この取引先にはまだ見積書がありません。</p>
     <% else %>
-      <ul>
-        <% @client.estimates.each do |estimate| %>
-          <li>
-            見積日: <%= estimate.issue_date %>,
-            有効期限: <%= estimate.expiry_date %>,
-            件名: <%= estimate.subject %>,
-            金額: <%= estimate.amount %>,
-            ステータス: <%= estimate.status %>,
-            区分: <%= estimate.direction %>
-            (<a href="/estimates/<%= estimate.id %>">詳細</a>)
-          </li>
-        <% end %>
-      </ul>
+      <table class="estimate-table">
+        <thead>
+          <tr>
+            <th>見積日</th>
+            <th>有効期限</th>
+            <th>件名</th>
+            <th>金額</th>
+            <th>ステータス</th>
+            <th>区分</th>
+            <th>詳細</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @client.estimates.each do |estimate| %>
+            <tr>
+              <td><%= estimate.issue_date %></td>
+              <td><%= estimate.expiry_date %></td>
+              <td><%= estimate.subject %></td>
+              <td><%= estimate.amount %></td>
+              <td><%= estimate.status %></td>
+              <td><%= estimate.direction %></td>
+              <td><a href="/estimates/<%= estimate.id %>">詳細</a></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     <% end %>
 
     <h3>新しい見積書の作成</h3>
