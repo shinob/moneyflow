@@ -71,6 +71,14 @@
     tr:hover {
       background-color: #f1f1f1;
     }
+    .flash-message {
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #d4edda;
+      background-color: #d4edda;
+      color: #155724;
+      border-radius: 4px;
+    }
   </style>
 </head>
 <body>
@@ -81,9 +89,18 @@
       <li><a href="/estimates">見積書</a></li>
       <li><a href="/invoices">請求書</a></li>
       <li><a href="/documents">ドキュメント一覧</a></li>
+      <li><a href="/password/edit">パスワード変更</a></li>
+      <li><a href="/logout">ログアウト</a></li>
     </ul>
   </nav>
   <hr>
+
+  <% if session[:flash] %>
+    <div class="flash-message">
+      <%= session.delete(:flash) %>
+    </div>
+  <% end %>
+
   <%= yield %>
 </body>
 </html>

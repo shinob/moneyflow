@@ -37,10 +37,46 @@ MoneyFlowは、SinatraとActiveRecordを使用して構築された、個人事�
     bundle install
     ```
 
-3.  **データベースをセットアップします:**
+3.  **環境変数を設定します:**
+    `.env`ファイルを作成し、セッションの暗号化キーを生成します。
+    ```bash
+    rake setup:env
+    ```
+
+4.  **データベースをセットアップします:**
     ```bash
     rake db:migrate
     ```
+
+## ユーザーの作成と管理
+
+アプリケーションの利用にはユーザーアカウントが必要です。
+
+### ユーザーの作成
+
+以下のコマンドを実行して、新しいユーザーを作成してください。
+
+```bash
+rake "db:create_user[ユーザー名,パスワード]"
+```
+
+例:
+```bash
+rake "db:create_user[admin,password123]"
+```
+
+### パスワードの変更
+
+既存ユーザーのパスワードを変更するには、以下のコマンドを実行します。
+
+```bash
+rake "db:change_password[ユーザー名,新しいパスワード]"
+```
+
+例:
+```bash
+rake "db:change_password[admin,new_password_456]"
+```
 
 ## 実行方法
 

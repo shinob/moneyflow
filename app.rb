@@ -2,12 +2,89 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'sinatra/activerecord'
 
+enable :sessions
+set :session_secret, ENV['SESSION_SECRET']
+
+helpers do
+  def current_user
+    @current_user ||= User.find_by(id: session[:user_id]) if session[:user_id]
+  end
+
+  def logged_in?
+    !current_user.nil?
+  end
+end
+
+before do
+  # Allow access to login page and login/logout process
+  return if request.path_info == '/login' || request.path_info == '/logout'
+
+  # Redirect to login if not logged in for all other pages
+  redirect '/login' unless logged_in?
+end
+
 set :database_file, "config/database.yml"
 
 require_relative 'app/models/client'
 require_relative 'app/models/invoice'
 require_relative 'app/models/estimate'
 require_relative 'app/models/payment'
+require_relative 'app/models/user'
+
+# --- Authentication Routes ---
+
+get '/login' do
+  erb :login, layout: false # No layout for the login page
+end
+
+post '/login' do
+  user = User.find_by(username: params[:username])
+  if user&.authenticate(params[:password])
+    session[:user_id] = user.id
+    redirect '/'
+  else
+    redirect '/login'
+  end
+end
+
+get '/logout' do
+  session.clear
+  redirect '/login'
+end
+
+# --- Password Change Routes ---
+
+get '/password/edit' do
+  erb :password_edit
+end
+
+post '/password' do
+  user = current_user
+
+  # 現在のパスワードが正しいか確認
+  unless user&.authenticate(params[:current_password])
+    @error = "現在のパスワードが正しくありません。"
+    return erb :password_edit
+  end
+
+  # 新しいパスワードが確認用と一致するか確認
+  if params[:new_password] != params[:password_confirmation]
+    @error = "新しいパスワードと確認用のパスワードが一致しません。"
+    return erb :password_edit
+  end
+
+  # パスワードを更新
+  if user.update(password: params[:new_password])
+    session[:flash] = "パスワードが正常に変更されました。"
+    redirect '/' # 成功したらトップページにリダイレクト
+  else
+    @error = user.errors.full_messages.join(", ")
+    erb :password_edit
+  end
+end
+
+# --- Main Application ---
+
 
 get '/' do
   erb :index, layout: :layout
