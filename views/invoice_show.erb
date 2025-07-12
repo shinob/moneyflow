@@ -1,11 +1,14 @@
 <h1><%= @invoice.subject %></h1>
 <h2>取引先: <%= @invoice.client.name %></h2>
+<p>件名: <%= @invoice.subject %></p>
 <p>請求日: <%= @invoice.issue_date %></p>
 <p>支払期日: <%= @invoice.due_date %></p>
-<p>件名: <%= @invoice.subject %></p>
 <p>金額: <%= @invoice.amount %></p>
-<p>ステータス: <%= @invoice.status %></p>
-<p>区分: <%= @invoice.direction %></p>
+<p>ステータス: <%= translate_status(@invoice.status) %></p>
+<p>区分: <%= translate_direction(@invoice.direction) %></p>
+<% if @invoice.attachment %>
+  <p>添付ファイル: <a href="<%= @invoice.attachment %>" target="_blank"><%= File.basename(@invoice.attachment.force_encoding('UTF-8')) %></a></p>
+<% end %>
 <p><a href="/invoices/<%= @invoice.id %>/edit" class="button-link">編集</a></p>
 
 <h2>ステータス変更</h2>

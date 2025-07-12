@@ -1,6 +1,9 @@
 require 'sinatra'
 require 'sinatra/reloader'
 require 'sinatra/activerecord'
+require 'securerandom'
+
+Encoding.default_external = 'UTF-8'
 
 enable :sessions
 set :session_secret, ENV['SESSION_SECRET']
@@ -12,6 +15,40 @@ helpers do
 
   def logged_in?
     !current_user.nil?
+  end
+
+  def translate_direction(direction)
+    case direction
+    when 'sent'
+      '送付'
+    when 'received'
+      '受領'
+    else
+      direction
+    end
+  end
+
+  def translate_status(status)
+    case status
+    when 'draft'
+      '下書き'
+    when 'sent'
+      '送付済み'
+    when 'paid'
+      '支払い済み'
+    when 'accepted'
+      '承認済み'
+    when 'rejected'
+      '失注'
+    when 'expired'
+      '期限切れ'
+    when 'submitted'
+      '提出済み'
+    when 'approved'
+      '承認済み'
+    else
+      status
+    end
   end
 end
 
@@ -149,6 +186,22 @@ get '/invoices/new' do
 end
 
 post '/invoices' do
+  attachment_path = nil
+  if params[:attachment]
+    original_filename = params[:attachment][:filename].force_encoding('UTF-8').encode('UTF-8')
+    tempfile = params[:attachment][:tempfile]
+    
+    # 拡張子を取得
+    ext = File.extname(original_filename)
+    # UUIDをファイル名に付加
+    unique_filename = "#{SecureRandom.uuid}#{ext}"
+    attachment_path = "/attachments/#{unique_filename}"
+
+    File.open("./public#{attachment_path}", 'wb') do |f|
+      f.write(tempfile.read)
+    end
+  end
+
   Invoice.create(
     client_id: params[:client_id],
     issue_date: params[:issue_date],
@@ -156,7 +209,8 @@ post '/invoices' do
     subject: params[:subject],
     amount: params[:amount],
     status: params[:status],
-    direction: params[:direction]
+    direction: params[:direction],
+    attachment: attachment_path
   )
   redirect '/invoices'
 end
@@ -173,24 +227,42 @@ end
 
 post '/clients/:id/estimates' do
   @client = Client.find(params[:id])
+
+  attachment_path = nil
+  if params[:attachment]
+    original_filename = params[:attachment][:filename].force_encoding('UTF-8').encode('UTF-8')
+    tempfile = params[:attachment][:tempfile]
+    
+    # 拡張子を取得
+    ext = File.extname(original_filename)
+    # UUIDをファイル名に付加
+    unique_filename = "#{SecureRandom.uuid}#{ext}"
+    attachment_path = "/attachments/#{unique_filename}"
+
+    File.open("./public#{attachment_path}", 'wb') do |f|
+      f.write(tempfile.read)
+    end
+  end
+
   @client.estimates.create(
     issue_date: params[:issue_date],
     expiry_date: params[:expiry_date],
     subject: params[:subject],
     amount: params[:amount],
     status: params[:status],
-    direction: params[:direction]
+    direction: params[:direction],
+    attachment: attachment_path
   )
   redirect "/clients/#{@client.id}"
 end
 
 get '/invoices' do
-  @invoices = Invoice.all
+  @invoices = Invoice.order(issue_date: :desc)
   erb :invoices
 end
 
 get '/estimates' do
-  @estimates = Estimate.all
+  @estimates = Estimate.order(issue_date: :desc)
   erb :estimates
 end
 
@@ -243,13 +315,36 @@ end
 
 put '/invoices/:id' do
   @invoice = Invoice.find(params[:id])
+
+  attachment_path = @invoice.attachment
+  if params[:attachment]
+    # 既存の添付ファイルがあれば削除
+    if attachment_path && File.exist?("./public#{attachment_path}")
+      File.delete("./public#{attachment_path}")
+    end
+
+    original_filename = params[:attachment][:filename].force_encoding('UTF-8').encode('UTF-8')
+    tempfile = params[:attachment][:tempfile]
+    
+    # 拡張子を取得
+    ext = File.extname(original_filename)
+    # UUIDをファイル名に付加
+    unique_filename = "#{SecureRandom.uuid}#{ext}"
+    attachment_path = "/attachments/#{unique_filename}"
+
+    File.open("./public#{attachment_path}", 'wb') do |f|
+      f.write(tempfile.read)
+    end
+  end
+
   @invoice.update(
     issue_date: params[:issue_date],
     due_date: params[:due_date],
     subject: params[:subject],
     amount: params[:amount],
     status: params[:status],
-    direction: params[:direction]
+    direction: params[:direction],
+    attachment: attachment_path
   )
   redirect "/invoices/#{@invoice.id}"
 end
@@ -270,15 +365,43 @@ post '/estimates/:id/update' do
   redirect "/estimates/#{@estimate.id}"
 end
 
+get '/attachments/:filename' do
+  filename = params[:filename].force_encoding('UTF-8')
+  send_file "./public/attachments/#{filename}", disposition: 'inline'
+end
+
 put '/estimates/:id' do
   @estimate = Estimate.find(params[:id])
+
+  attachment_path = @estimate.attachment
+  if params[:attachment]
+    # 既存の添付ファイルがあれば削除
+    if attachment_path && File.exist?("./public#{attachment_path}")
+      File.delete("./public#{attachment_path}")
+    end
+
+    original_filename = params[:attachment][:filename].force_encoding('UTF-8').encode('UTF-8')
+    tempfile = params[:attachment][:tempfile]
+    
+    # 拡張子を取得
+    ext = File.extname(original_filename)
+    # UUIDをファイル名に付加
+    unique_filename = "#{SecureRandom.uuid}#{ext}"
+    attachment_path = "/attachments/#{unique_filename}"
+
+    File.open("./public#{attachment_path}", 'wb') do |f|
+      f.write(tempfile.read)
+    end
+  end
+
   @estimate.update(
     issue_date: params[:issue_date],
     expiry_date: params[:expiry_date],
     subject: params[:subject],
     amount: params[:amount],
     status: params[:status],
-    direction: params[:direction]
+    direction: params[:direction],
+    attachment: attachment_path
   )
   redirect "/estimates/#{@estimate.id}"
 end

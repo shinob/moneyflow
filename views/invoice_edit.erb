@@ -1,7 +1,11 @@
 <h1>請求書 #<%= @invoice.id %> の編集</h1>
 
-<form action="/invoices/<%= @invoice.id %>" method="post">
+<form action="/invoices/<%= @invoice.id %>" method="post" enctype="multipart/form-data">
   <input type="hidden" name="_method" value="put">
+  <div>
+    <label for="subject">件名:</label>
+    <input type="text" id="subject" name="subject" value="<%= @invoice.subject %>">
+  </div>
   <div>
     <label for="issue_date">請求日:</label>
     <input type="date" id="issue_date" name="issue_date" value="<%= @invoice.issue_date %>">
@@ -9,10 +13,6 @@
   <div>
     <label for="due_date">支払期日:</label>
     <input type="date" id="due_date" name="due_date" value="<%= @invoice.due_date %>">
-  </div>
-  <div>
-    <label for="subject">件名:</label>
-    <input type="text" id="subject" name="subject" value="<%= @invoice.subject %>">
   </div>
   <div>
     <label for="amount">金額:</label>
@@ -30,9 +30,16 @@
   <div>
     <label for="direction">区分:</label>
     <select id="direction" name="direction">
-      <option value="sent" <%= 'selected' if @invoice.direction == 'sent' %>>送った請求書</option>
-      <option value="received" <%= 'selected' if @invoice.direction == 'received' %>>受け取った請求書</option>
+      <option value="sent" <%= 'selected' if @invoice.direction == 'sent' %>>送付</option>
+      <option value="received" <%= 'selected' if @invoice.direction == 'received' %>>受領</option>
     </select>
+  </div>
+  <div>
+    <label for="attachment">添付ファイル (PDF):</label>
+    <input type="file" id="attachment" name="attachment" accept=".pdf">
+    <% if @invoice.attachment %>
+      <p>現在の添付ファイル: <a href="<%= @invoice.attachment %>" target="_blank"><%= File.basename(@invoice.attachment) %></a></p>
+    <% end %>
   </div>
   <button type="submit">更新</button>
 </form>

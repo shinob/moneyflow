@@ -1,6 +1,8 @@
 require_relative './app'
 require 'sinatra/activerecord/rake'
 
+Dir.glob('lib/tasks/*.rake').each { |r| import r }
+
 namespace :db do
   desc "Create a new user"
   task :create_user, [:username, :password] do |t, args|

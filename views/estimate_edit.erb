@@ -1,6 +1,6 @@
 <h1>見積書 #<%= @estimate.id %> の編集</h1>
 
-<form action="/estimates/<%= @estimate.id %>" method="post">
+<form action="/estimates/<%= @estimate.id %>" method="post" enctype="multipart/form-data">
   <input type="hidden" name="_method" value="put">
   <div>
     <label for="issue_date">見積日:</label>
@@ -30,9 +30,16 @@
   <div>
     <label for="direction">区分:</label>
     <select id="direction" name="direction">
-      <option value="sent" <%= 'selected' if @estimate.direction == 'sent' %>>送った見積書</option>
-      <option value="received" <%= 'selected' if @estimate.direction == 'received' %>>受け取った見積書</option>
+      <option value="sent" <%= 'selected' if @estimate.direction == 'sent' %>>送付</option>
+      <option value="received" <%= 'selected' if @estimate.direction == 'received' %>>受領</option>
     </select>
+  </div>
+  <div>
+    <label for="attachment">添付ファイル (PDF):</label>
+    <input type="file" id="attachment" name="attachment" accept=".pdf">
+    <% if @estimate.attachment %>
+      <p>現在の添付ファイル: <a href="<%= @estimate.attachment %>" target="_blank"><%= File.basename(@estimate.attachment) %></a></p>
+    <% end %>
   </div>
   <button type="submit">更新</button>
 </form>

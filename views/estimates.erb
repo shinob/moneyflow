@@ -33,7 +33,7 @@
 
   <div id="sent-estimates-tab" class="tab-content">
     <h3>送った見積書</h3>
-    <% sent_estimates = @estimates.select { |e| e.direction == 'sent' } %>
+    <% sent_estimates = @estimates.select { |e| e.direction == 'sent' }.sort_by(&:issue_date).reverse %>
     <% if sent_estimates.empty? %>
       <p>送った見積書はまだありません。</p>
     <% else %>
@@ -57,7 +57,7 @@
               <td><%= estimate.expiry_date %></td>
               <td><%= estimate.subject %></td>
               <td><%= estimate.amount %></td>
-              <td><%= estimate.status %></td>
+              <td><%= translate_status(estimate.status) %></td>
               <td><a href="/estimates/<%= estimate.id %>">詳細</a></td>
             </tr>
           <% end %>
@@ -68,7 +68,7 @@
 
   <div id="received-estimates-tab" class="tab-content hidden">
     <h3>受け取った見積書</h3>
-    <% received_estimates = @estimates.select { |e| e.direction == 'received' } %>
+    <% received_estimates = @estimates.select { |e| e.direction == 'received' }.sort_by(&:issue_date).reverse %>
     <% if received_estimates.empty? %>
       <p>受け取った見積書はまだありません。</p>
     <% else %>
@@ -86,13 +86,13 @@
         </thead>
         <tbody>
           <% received_estimates.each do |estimate| %>
-            <tr>
+            <tr class="<%= "status-#{estimate.status.downcase}" %>">
               <td><%= estimate.client.name %></td>
               <td><%= estimate.issue_date %></td>
               <td><%= estimate.expiry_date %></td>
               <td><%= estimate.subject %></td>
               <td><%= estimate.amount %></td>
-              <td><%= estimate.status %></td>
+              <td><%= translate_status(estimate.status) %></td>
               <td><a href="/estimates/<%= estimate.id %>">詳細</a></td>
             </tr>
           <% end %>

@@ -57,76 +57,136 @@
 
 </style>
 
-<h2>送ったドキュメント</h2>
-<h3>送った請求書</h3>
-<% sent_invoices = @invoices.select { |i| i.direction == 'sent' } %>
-<% if sent_invoices.empty? %>
-  <p>送った請求書はまだありません。</p>
-<% else %>
-  <ul>
-    <% sent_invoices.each do |invoice| %>
-      <li>
-        取引先: <%= invoice.client.name %>,
-        件名: <%= invoice.subject %>,
-        金額: <%= invoice.amount %>,
-        ステータス: <%= invoice.status %>
-        (<a href="/invoices/<%= invoice.id %>">詳細</a>)
-      </li>
-    <% end %>
-  </ul>
-<% end %>
-
-<h3>送った見積書</h3>
+<h2>送付した書類</h2>
+<h3>見積書</h3>
 <% sent_estimates = @estimates.select { |e| e.direction == 'sent' } %>
 <% if sent_estimates.empty? %>
   <p>送った見積書はまだありません。</p>
 <% else %>
-  <ul>
-    <% sent_estimates.each do |estimate| %>
-      <li>
-        取引先: <%= estimate.client.name %>,
-        件名: <%= estimate.subject %>,
-        金額: <%= estimate.amount %>,
-        ステータス: <%= estimate.status %>
-        (<a href="/estimates/<%= estimate.id %>">詳細</a>)
-      </li>
-    <% end %>
-  </ul>
+  <table class="estimate-table">
+    <thead>
+      <tr>
+        <th>取引先</th>
+        <th>見積日</th>
+        <th>有効期限</th>
+        <th>件名</th>
+        <th>金額</th>
+        <th>ステータス</th>
+        <th>詳細</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% sent_estimates.each do |estimate| %>
+        <tr>
+          <td><%= estimate.client.name %></td>
+          <td><%= estimate.issue_date %></td>
+          <td><%= estimate.expiry_date %></td>
+          <td><%= estimate.subject %></td>
+          <td><%= estimate.amount %></td>
+          <td><%= translate_status(estimate.status) %></td>
+          <td><a href="/estimates/<%= estimate.id %>">詳細</a></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 <% end %>
 
-<h2>受け取ったドキュメント</h2>
-<h3>受け取った請求書</h3>
-<% received_invoices = @invoices.select { |i| i.direction == 'received' } %>
-<% if received_invoices.empty? %>
-  <p>受け取った請求書はまだありません。</p>
+<h3>請求書</h3>
+<% sent_invoices = @invoices.select { |i| i.direction == 'sent' } %>
+<% if sent_invoices.empty? %>
+  <p>送った請求書はまだありません。</p>
 <% else %>
-  <ul>
-    <% received_invoices.each do |invoice| %>
-      <li>
-        取引先: <%= invoice.client.name %>,
-        件名: <%= invoice.subject %>,
-        金額: <%= invoice.amount %>,
-        ステータス: <%= invoice.status %>
-        (<a href="/invoices/<%= invoice.id %>">詳細</a>)
-      </li>
-    <% end %>
-  </ul>
+  <table class="invoice-table">
+    <thead>
+      <tr>
+        <th>取引先</th>
+        <th>請求日</th>
+        <th>支払期日</th>
+        <th>件名</th>
+        <th>金額</th>
+        <th>ステータス</th>
+        <th>詳細</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% sent_invoices.each do |invoice| %>
+        <tr>
+          <td><%= invoice.client.name %></td>
+          <td><%= invoice.issue_date %></td>
+          <td><%= invoice.due_date %></td>
+          <td><%= invoice.subject %></td>
+          <td><%= invoice.amount %></td>
+          <td><%= translate_status(invoice.status) %></td>
+          <td><a href="/invoices/<%= invoice.id %>">詳細</a></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 <% end %>
 
-<h3>受け取った見積書</h3>
+<h2>受領した書類</h2>
+<h3>見積書</h3>
 <% received_estimates = @estimates.select { |e| e.direction == 'received' } %>
 <% if received_estimates.empty? %>
   <p>受け取った見積書はまだありません。</p>
 <% else %>
-  <ul>
-    <% received_estimates.each do |estimate| %>
-      <li>
-        取引先: <%= estimate.client.name %>,
-        件名: <%= estimate.subject %>,
-        金額: <%= estimate.amount %>,
-        ステータス: <%= estimate.status %>
-        (<a href="/estimates/<%= estimate.id %>">詳細</a>)
-      </li>
-    <% end %>
-  </ul>
+  <table class="estimate-table">
+    <thead>
+      <tr>
+        <th>取引先</th>
+        <th>見積日</th>
+        <th>有効期限</th>
+        <th>件名</th>
+        <th>金額</th>
+        <th>ステータス</th>
+        <th>詳細</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% received_estimates.each do |estimate| %>
+        <tr>
+          <td><%= estimate.client.name %></td>
+          <td><%= estimate.issue_date %></td>
+          <td><%= estimate.expiry_date %></td>
+          <td><%= estimate.subject %></td>
+          <td><%= estimate.amount %></td>
+          <td><%= translate_status(estimate.status) %></td>
+          <td><a href="/estimates/<%= estimate.id %>">詳細</a></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<h3>請求書</h3>
+<% received_invoices = @invoices.select { |i| i.direction == 'received' } %>
+<% if received_invoices.empty? %>
+  <p>受け取った請求書はまだありません。</p>
+<% else %>
+  <table class="invoice-table">
+    <thead>
+      <tr>
+        <th>取引先</th>
+        <th>請求日</th>
+        <th>支払期日</th>
+        <th>件名</th>
+        <th>金額</th>
+        <th>ステータス</th>
+        <th>詳細</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% received_invoices.each do |invoice| %>
+        <tr>
+          <td><%= invoice.client.name %></td>
+          <td><%= invoice.issue_date %></td>
+          <td><%= invoice.due_date %></td>
+          <td><%= invoice.subject %></td>
+          <td><%= invoice.amount %></td>
+          <td><%= translate_status(invoice.status) %></td>
+          <td><a href="/invoices/<%= invoice.id %>">詳細</a></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 <% end %>
